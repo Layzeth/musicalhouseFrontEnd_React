@@ -9,6 +9,7 @@ import axios from "axios";
 import Typography from "@mui/material/Typography";
 import {Card, CardContent, CardHeader, FormControl, Grid, InputLabel, LinearProgress, MenuItem, Select, TextField, Box, Divider, Button} from "@mui/material";
 import {LoadingButton} from "@mui/lab";
+import {getTokenHeader} from "../auth.ts";
 
 
 export interface MapFileToTrackMetadata {
@@ -41,7 +42,7 @@ export default function Releases() {
 
     const getArtists = async () => {
         setLoadingTable(true);
-        axios.get<Artist[]>(`${MICROSERVICE_GATEWAY}/artists`)
+        axios.get<Artist[]>(`${MICROSERVICE_GATEWAY}/artists`, getTokenHeader())
             .then(response => setArtists(response.data))
             .catch(catchError)
             .finally(() => setLoadingTable(false));
@@ -49,7 +50,7 @@ export default function Releases() {
 
     const getGenres = async () => {
         setLoadingTable(true);
-        axios.get<Genre[]>(`${MICROSERVICE_GATEWAY}/genres`)
+        axios.get<Genre[]>(`${MICROSERVICE_GATEWAY}/genres`, getTokenHeader())
             .then(response => setGenres(response.data))
             .catch(catchError)
             .finally(() => setLoadingTable(false));
@@ -57,7 +58,7 @@ export default function Releases() {
 
     const getReleases = async () => {
         setLoadingTable(true);
-        axios.get<Release[]>(`${MICROSERVICE_GATEWAY}/releases`)
+        axios.get<Release[]>(`${MICROSERVICE_GATEWAY}/releases`, getTokenHeader())
             .then(response => setReleases(response.data))
             .catch(catchError)
             .finally(() => setLoadingTable(false));

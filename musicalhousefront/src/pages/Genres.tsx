@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import { Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, LinearProgress } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { styled } from "@mui/system";
+import {getTokenHeader} from "../auth.ts";
 
 const CustomPaper = styled(Paper)(({ theme }) => ({
     backgroundColor: "#121212",
@@ -49,7 +50,7 @@ export default function Genres() {
         const form = new FormData();
         form.append("name", name);
 
-        axios.post<string>(`${MICROSERVICE_GATEWAY}/genres`, form)
+        axios.post<string>(`${MICROSERVICE_GATEWAY}/genres`, form, getTokenHeader())
             .then(response => {
                 enqueueSnackbar(response.data, { variant: 'success' });
                 resetFields();
@@ -67,7 +68,7 @@ export default function Genres() {
         form.append("id", genreToEdit.id.toString())
         form.append("name", name);
 
-        axios.put<string>(`${MICROSERVICE_GATEWAY}/genres`, form)
+        axios.put<string>(`${MICROSERVICE_GATEWAY}/genres`, form, getTokenHeader())
             .then(response => {
                 enqueueSnackbar(response.data, { variant: 'success' });
                 resetFields();
@@ -79,7 +80,7 @@ export default function Genres() {
 
     const deleteGenre = async (id: number) => {
         setLoadingButtons(true);
-        axios.delete<string>(`${MICROSERVICE_GATEWAY}/genres/${id}`)
+        axios.delete<string>(`${MICROSERVICE_GATEWAY}/genres/${id}`, getTokenHeader())
             .then(response => {
                 enqueueSnackbar(response.data, { variant: 'success' });
                 getGenres().then();
@@ -90,7 +91,7 @@ export default function Genres() {
 
     const getGenres = async () => {
         setLoadingTable(true);
-        axios.get<Genre[]>(`${MICROSERVICE_GATEWAY}/genres`)
+        axios.get<Genre[]>(`${MICROSERVICE_GATEWAY}/genres`, getTokenHeader())
             .then(response => {
                 setGenres(response.data);
             })

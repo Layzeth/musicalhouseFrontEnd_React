@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import {LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Box, Card, CardContent, Chip, IconButton, Tooltip} from "@mui/material";import {MICROSERVICE_GATEWAY} from "../Consts.ts";
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import GetAppIcon from '@mui/icons-material/GetApp';
+import {getTokenHeader} from "../auth.ts";
 
 export default function Tracks() {
     const [tracks, setTracks] = useState<Track[]>([]);
@@ -18,7 +19,7 @@ export default function Tracks() {
 
     const getTracks = async () => {
         setLoadingTracks(true);
-        axios.get<Track[]>(`${MICROSERVICE_GATEWAY}/tracks`)
+        axios.get<Track[]>(`${MICROSERVICE_GATEWAY}/tracks`, getTokenHeader())
             .then(response => setTracks(response.data))
             .catch(errorCatch)
             .finally(() => setLoadingTracks(false));
@@ -31,7 +32,7 @@ export default function Tracks() {
         }
         const url = `${MICROSERVICE_GATEWAY}/tracksInformation/reproduce/${track.fileIdentifier}`;
         const audio = new Audio(url);
-        audio.play();
+        audio.play().then();
         setCurrentAudio(audio);
         
     }
@@ -42,13 +43,13 @@ export default function Tracks() {
     }
 
     const likeTrack = (track: Track) => {
-        axios.put(`${MICROSERVICE_GATEWAY}/tracksInformation/like/${track.fileIdentifier}`)
+        axios.put(`${MICROSERVICE_GATEWAY}/tracksInformation/like/${track.fileIdentifier}`, getTokenHeader())
             .then(() => getTracks())
             .catch(errorCatch);
     }
 
     const dislikeTrack = (track: Track) => {
-        axios.put(`${MICROSERVICE_GATEWAY}/tracksInformation/dislike/${track.fileIdentifier}`)
+        axios.put(`${MICROSERVICE_GATEWAY}/tracksInformation/dislike/${track.fileIdentifier}`, getTokenHeader())
             .then(() => getTracks())
             .catch(errorCatch);
     }

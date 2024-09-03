@@ -23,6 +23,7 @@ import {
 } from "@mui/material";
 import {LoadingButton} from "@mui/lab";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
+import {getTokenHeader} from "../auth.ts";
 
 const theme = createTheme({
     palette: {
@@ -90,7 +91,7 @@ export default function Artists() {
         form.append("country", country);
         form.append("birthday", birthday);
 
-        axios.post<string>(`${MICROSERVICE_GATEWAY}/artists`, form)
+        axios.post<string>(`${MICROSERVICE_GATEWAY}/artists`, form, getTokenHeader())
             .then(response => {
                 enqueueSnackbar(response.data, {variant: 'success'});
                 resetFields();
@@ -110,7 +111,7 @@ export default function Artists() {
         form.append("country", country);
         form.append("birthday", birthday);
 
-        axios.put<string>(`${MICROSERVICE_GATEWAY}/artists`, form)
+        axios.put<string>(`${MICROSERVICE_GATEWAY}/artists`, form, getTokenHeader())
             .then(response => {
                 enqueueSnackbar(response.data, {variant: 'success'});
                 resetFields();
@@ -122,7 +123,7 @@ export default function Artists() {
 
     const deleteArtist = async (id: number) => {
         setLoadingButtons(true);
-        axios.delete<string>(`${MICROSERVICE_GATEWAY}/artists/${id}`)
+        axios.delete<string>(`${MICROSERVICE_GATEWAY}/artists/${id}`, getTokenHeader())
             .then(response => {
                 enqueueSnackbar(response.data, {variant: 'success'});
                 getArtists().then();
@@ -133,7 +134,7 @@ export default function Artists() {
 
     const getArtists = async () => {
         setLoadingTable(true);
-        axios.get<Artist[]>(`${MICROSERVICE_GATEWAY}/artists`)
+        axios.get<Artist[]>(`${MICROSERVICE_GATEWAY}/artists`, getTokenHeader())
             .then(response => {
                 setArtists(response.data);
             })
@@ -147,7 +148,7 @@ export default function Artists() {
 
     return (
         <ThemeProvider theme={theme}>
-            <CssBaseline />
+            <CssBaseline/>
             <Layout>
                 <Container maxWidth="md">
                     <Typography variant="h4" align="center" gutterBottom color="textPrimary">
@@ -162,7 +163,7 @@ export default function Artists() {
                                     value={name}
                                     onChange={event => setName(event.target.value)}
                                     variant="outlined"
-                                    InputLabelProps={{ shrink: true }}
+                                    InputLabelProps={{shrink: true}}
                                     color="primary"
                                 />
                             </Grid>
@@ -173,7 +174,7 @@ export default function Artists() {
                                     value={country}
                                     onChange={event => setCountry(event.target.value)}
                                     variant="outlined"
-                                    InputLabelProps={{ shrink: true }}
+                                    InputLabelProps={{shrink: true}}
                                     color="primary"
                                 />
                             </Grid>
@@ -184,7 +185,7 @@ export default function Artists() {
                                     label="Birthday"
                                     value={birthday}
                                     onChange={event => setBirthday(event.target.value)}
-                                    InputLabelProps={{ shrink: true }}
+                                    InputLabelProps={{shrink: true}}
                                     variant="outlined"
                                     color="primary"
                                 />
@@ -219,7 +220,7 @@ export default function Artists() {
                         Artist List
                     </Typography>
                     {loadingTable ? (
-                        <LinearProgress color="primary" />
+                        <LinearProgress color="primary"/>
                     ) : (
                         <Paper>
                             <TableContainer>
@@ -246,7 +247,7 @@ export default function Artists() {
                                                             variant="contained"
                                                             color="primary"
                                                             size="small"
-                                                            sx={{ mr: 1 }}
+                                                            sx={{mr: 1}}
                                                         >
                                                             Edit
                                                         </LoadingButton>
