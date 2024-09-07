@@ -88,7 +88,7 @@ export default function Tracks() {
                                         ))}
                                     </TableCell>
                                     <TableCell>
-                                        <InfoTrack fileIdentifier={track.fileIdentifier} />
+                                        <InfoTrack track={track} />
                                     </TableCell>
                                     <TableCell align="center">
                                         <Tooltip title="Play">
@@ -124,13 +124,13 @@ export default function Tracks() {
 
 interface TrackInformation {
     fileIdentifier: string;
-    reproductionCount: number;
+    //reproductionCount: number;
     likeCount: number;
     dislikeCount: number;
-    downloadCount: number;
+    //downloadCount: number;
 }
 
-function InfoTrack({fileIdentifier}: { fileIdentifier: string }) {
+function InfoTrack({track}: { track: Track }) {
     const [information, setInformation] = useState<TrackInformation | null>(null);
     const [loading, setLoading] = useState(true);
     const {enqueueSnackbar} = useSnackbar();
@@ -138,7 +138,7 @@ function InfoTrack({fileIdentifier}: { fileIdentifier: string }) {
 
     const getInformation = async () => {
         setLoading(true);
-        axios.get<TrackInformation>(`${MICROSERVICE_GATEWAY}/tracksInformation/info/${fileIdentifier}`)
+        axios.get<TrackInformation>(`${MICROSERVICE_GATEWAY}/tracksInformation/info/${track.fileIdentifier}`, getTokenHeader())
             .then(response => setInformation(response.data))
             .catch(errorCatch)
             .finally(() => setLoading(false));
@@ -146,7 +146,7 @@ function InfoTrack({fileIdentifier}: { fileIdentifier: string }) {
 
     useEffect(() => {
         getInformation().then();
-    }, [fileIdentifier]);
+    }, [track.fileIdentifier]);
 
     if (loading) {
         return <Box sx={{display: 'flex', justifyContent: 'center'}}><LinearProgress /></Box>;
@@ -162,7 +162,7 @@ function InfoTrack({fileIdentifier}: { fileIdentifier: string }) {
                 <Typography variant="subtitle2" gutterBottom>Track Stats</Typography>
                 <Box display="flex" justifyContent="space-between">
                     <Tooltip title="Reproductions">
-                        <Chip icon={<PlayArrowIcon />} label={information.reproductionCount} size="small" />
+                        <Chip icon={<PlayArrowIcon />} label={track.reproductionCount} size="small" />
                     </Tooltip>
                     <Tooltip title="Likes">
                         <Chip icon={<span>👍</span>} label={information.likeCount} size="small" />
@@ -171,7 +171,7 @@ function InfoTrack({fileIdentifier}: { fileIdentifier: string }) {
                         <Chip icon={<span>👎</span>} label={information.dislikeCount} size="small" />
                     </Tooltip>
                     <Tooltip title="Downloads">
-                        <Chip icon={<GetAppIcon />} label={information.downloadCount} size="small" />
+                        <Chip icon={<GetAppIcon />} label={track.downloadCount} size="small" />
                     </Tooltip>
                 </Box>
             </CardContent>

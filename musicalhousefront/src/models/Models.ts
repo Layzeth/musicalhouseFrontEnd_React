@@ -17,6 +17,8 @@ export interface Track {
     fileIdentifier: string;
     genre: Genre;
     contributors: Artist[];
+    reproductionCount: number;
+    downloadCount: number;
 }
 
 export enum ReleaseType {
